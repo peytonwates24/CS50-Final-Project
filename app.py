@@ -14,9 +14,9 @@ def create_connection():
     try:
         connection = mysql.connector.connect(
             host='localhost',
-            database='form_results',   # Your DB name
-            user='root',              # Your DB user
-            password='Reddog1224'     # Your DB password
+            database='',   # Your DB name
+            user='',              # Your DB user
+            password=''     # Your DB password
         )
         if connection.is_connected():
             print("Connected to MySQL database")
