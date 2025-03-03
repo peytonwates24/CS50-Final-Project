@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Training Calendar</title>
+  <style>
+    /* Basic reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background: #f9f9f9;
+      color: #333;
+      padding: 20px;
+    }
+
+    .calendar-container {
+      width: 90%;
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
+
+    .calendar-header {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .calendar-header h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+    .calendar-header p {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+
+    /* Month navigation bar */
+    .month-nav-container {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .month-nav {
+      display: inline-block;
+      margin: 0 10px;
+      padding: 6px 12px;
+      background: #0073e6;
+      color: #fff;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: background 0.2s ease;
+    }
+    .month-nav:hover {
+      background: #005bb5;
+    }
+    .current-month {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin: 0 10px;
+      color: #333;
+    }
+
+    table.calendar {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    .calendar thead th {
+      text-transform: uppercase;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding-bottom: 0.5rem;
+      color: #999;
+    }
+    .calendar tbody td {
+      vertical-align: top;
+      height: 110px;
+      border: 1px solid #eee;
+      width: 14.285%;
+      padding: 8px;
+      text-align: right;
+      transition: background 0.2s ease;
+    }
+    .calendar tbody td:hover {
+      background: #fafafa;
+    }
+
+    /* Day number bubble */
+    .day-number {
+      display: inline-block;
+      background: #0073e6;
+      color: #fff;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      text-align: center;
+      line-height: 24px;
+      font-size: 0.8rem;
+      margin-bottom: 4px;
+    }
+
+    /* Workout link styling */
+    .workout-link {
+      color: #0073e6;
+      text-decoration: underline;
+      cursor: pointer;
+      display: block;
+      margin-top: 4px;
+      text-align: left;
+    }
+    .workout-link:hover {
+      color: #005bb5;
+    }
+
+    /* Race Day Banner */
+    .race-day-banner {
+      margin-top: 5px;
+      background-color: #ffeb3b;
+      color: #333;
+      border-radius: 4px;
+      padding: 2px 6px;
+      display: inline-flex;
+      align-items: center;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    .race-day-banner img {
+      height: 24px;
+      margin-right: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calendar-container">
+    <div class="calendar-header">
+      <h1>Training Calendar - Contact {{ contact_id }}</h1>
+      <p>
+        Race Type: {{ race_type }} <br>
+        Event Date: {{ event_date }}
+      </p>
+    </div>
+
+    <!-- Month navigation -->
+    <div class="month-nav-container">
+      <a href="{{ url_for('calendar_view',
+                          contact_id=contact_id,
+                          year=prev_year,
+                          month=prev_month) }}"
+         class="month-nav">
+        &laquo; Prev
+      </a>
+
+      <span class="current-month">
+        {{ display_month }}/{{ display_year }}
+      </span>
+
+      <a href="{{ url_for('calendar_view',
+                          contact_id=contact_id,
+                          year=next_year,
+                          month=next_month) }}"
+         class="month-nav">
+        Next &raquo;
+      </a>
+    </div>
+
+    <table class="calendar">
+      <thead>
+        <tr>
+          <th>Mon</th>
+          <th>Tue</th>
+          <th>Wed</th>
+          <th>Thu</th>
+          <th>Fri</th>
+          <th>Sat</th>
+          <th>Sun</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for week in calendar_weeks %}
+        <tr>
+          {% for day in week %}
+            {% if day %}
+              <td>
+                <div class="day-number">{{ day.day }}</div>
+
+                <!-- Show race day banner if day == event_date -->
+                {% if day == event_date %}
+                <div class="race-day-banner">
+                  <img src="https://aaah0mnbncqtinas.public.blob.vercel-storage.com/2KDfJmiWr3-no-background-XXmrRZw17wFkvvUIffgw397WX3UbQQ.png"
+                       alt="Race Day Icon">
+                  RACE DAY!
+                </div>
+                {% endif %}
+
+                {% if day in day_map %}
+                  {% for wkt in day_map[day] %}
+                    <a class="workout-link"
+                       onclick="showWorkoutDetails('{{ wkt.workout_name }}',
+                                                   '{{ wkt.discipline }}',
+                                                   '{{ wkt.distance }}',
+                                                   '{{ wkt.duration }}',
+                                                   '{{ wkt.pace }}')">
+                      {{ wkt.workout_name }} ({{ wkt.discipline }})
+                    </a>
+                  {% endfor %}
+                {% endif %}
+              </td>
+            {% else %}
+              <td></td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function showWorkoutDetails(name, discipline, dist, dur, pace) {
+      alert(
+        "Workout: " + name + "\n" +
+        "Discipline: " + discipline + "\n" +
+        "Distance: " + dist + "\n" +
+        "Duration: " + dur + "\n" +
+        "Pace: " + pace
+      );
+    }
+  </script>
+
+</body>
+</html>

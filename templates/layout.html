@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}{% endblock %}</title>
+  <!-- Bootstrap CSS (optional, feel free to remove if not using Bootstrap) -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <style>
+    /* Basic reset and styling */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #fff;
+    }
+
+    header {
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0;
+    }
+
+    main h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #e3e3e3;
+      font-size: 0.875rem;
+      color: #666;
+    }
+
+    footer a {
+      color: #666;
+      text-decoration: underline;
+    }
+  </style>
+
+  {% block style %}{% endblock %}
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>My Triathlon Planner</h1>
+    </header>
+
+    <main>
+      {% block heading %}{% endblock %}
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+      <!-- Example bottom note to mirror the screenshot style -->
+      <p>
+        The quiz is not a medical assessment and your responses will not be shared with a medical provider.
+        Use this planner responsibly. For more information, read our
+        <a href="#">Privacy Policy</a>.
+      </p>
+    </footer>
+  </div>
+
+  <!-- Optional Bootstrap + dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
